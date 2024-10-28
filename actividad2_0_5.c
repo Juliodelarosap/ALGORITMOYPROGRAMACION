@@ -26,6 +26,7 @@ así como el total de boletos obtenido.*/
 
 #include <stdio.h>
 #include <string.h>
+    
 
 int main() {
     char tipo_procedimiento[20];
@@ -51,6 +52,7 @@ int main() {
     } else {
         boletos += 20;
     }
+
 
     // Calcular boletos por tipo de procedimiento
     if (strcmp(tipo_procedimiento, "Corte") == 0) {
