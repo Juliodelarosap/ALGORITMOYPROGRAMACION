@@ -130,6 +130,7 @@ do {
     printf("1. Gestion de inventario\n");
     printf("2. Gestion de transacciones\n");
     printf("3. Salir del programa\n");
+    printf("4. Mostrar inventario\n");
     printf("Seleccione una opcion: ");
     scanf("%d", &opcion);
 
@@ -143,6 +144,10 @@ do {
         case 3:
             salir_del_programa();
             break;
+        
+        case 4:
+            mostrar_menu_inventario();
+            break;
         default:
             printf("Opcion no valida\n");
         }
@@ -151,6 +156,175 @@ do {
 
     return 0;
 }
+
+void mostrar_menu_inventario() {
+    printf("\n--- Listado de Inventario ---\n");
+    for (int i = 0; i < cantidad_productos; i++) {
+        printf("ID: %d, Nombre: %s, Cantidad: %d, Precio: %.2f, Proveedor: %s\n",
+               inventario[i].id, inventario[i].nombre, inventario[i].existencia, inventario[i].precio_venta, inventario[i].proveedor, inventario[i].estado, 
+               inventario[i].fechaultimacompra,inventario[i].fehcaultimaventa,inventario[i].unidad_medida, inventario[i].empaque, inventario[i].peso);
+    }
+    gestion_de_inventario();
+}
+
+void gestion_de_inventario() {
+    int opcion;
+    printf("\nOpciones:\n");
+    printf("1. Crear producto\n");
+    printf("2. Actualizar producto\n");
+    printf("3. Eliminar producto\n");
+    printf("4. Regresar al menu principal\n");
+    printf("Seleccione una opcion: ");
+    scanf("%d", &opcion);
+
+    switch (opcion) {
+        case 1: {
+            Producto p;
+            printf("Ingrese ID del producto: ");
+            scanf("%d", &p.id);
+            printf("Ingrese nombre del producto: ");
+            scanf("%s", p.nombre);
+            printf("Ingrese cantidad inicial: ");
+            scanf("%d", &p.existencia);
+            printf("Ingrese precio de compra: ");
+            scanf("%f", &p.precio_compra);
+            printf("Ingrese proveedor: ");
+            scanf("%s", p.proveedor);
+           /* printf("Producto activo (a), cancelado (c) o descontinuado (d): ");
+            scanf("%s", p.estado);
+            printf("Ingrese fecha de la ultima compra: ");
+            scanf("%s", p.fechaultimacompra);
+            printf("Ingrese fecha de la ultima venta: ");
+            scanf("%s", p.fehcaultimaventa);
+            printf("Ingrese unidad de medida (l = litros, kg = kilogramos, u = unidades): ");
+            scanf("%f", &p.unidad_medida);
+            printf("Ingrese empaque (c = caja, p = paquete, u = unidad): ");
+            scanf("%f", &p.empaque);
+            printf("Ingrese peso: ");
+            scanf("%f", &p.peso);*/
+
+            
+            p.precio_venta = p.precio_compra * 1.2; // Precio de venta con 20% de margen
+            inventario[cantidad_productos++] = p;
+
+            printf("Producto agregado con exito.\n");
+            break;
+        }
+        case 2: {
+            int id, encontrado = 0;
+            printf("Ingrese ID del producto a actualizar: ");
+            scanf("%d", &id);
+            for (int i = 0; i < cantidad_productos; i++) {
+                if (inventario[i].id == id) {
+                    printf("Ingrese nuevo nombre: ");
+                    scanf("%s", inventario[i].nombre);
+                    printf("Ingrese nueva cantidad: ");
+                    scanf("%d", &inventario[i].existencia);
+                    printf("Ingrese nuevo precio: ");
+                    scanf("%f", &inventario[i].precio_venta);
+                    printf("Ingrese nuevo proveedor: ");
+                    scanf("%s", inventario[i].proveedor);
+                    encontrado = 1;
+                    printf("Producto actualizado.\n");
+                    break;
+                }
+            }
+            if (!encontrado) {
+                printf("Producto no encontrado.\n");
+            }
+            break;
+        }
+        case 3: {
+            int id, encontrado = 0;
+            printf("Ingrese ID del producto a eliminar: ");
+            scanf("%d", &id);
+            for (int i = 0; i < cantidad_productos; i++) {
+                if (inventario[i].id == id) {
+                    for (int j = i; j < cantidad_productos - 1; j++) {
+                        inventario[j] = inventario[j + 1];
+                    }
+                    cantidad_productos--;
+                    encontrado = 1;
+                    printf("Producto eliminado.\n");
+                    break;
+                }
+            }
+            if (!encontrado) {
+                printf("Producto no encontrado.\n");
+            }
+            break;
+        }
+        case 4:
+            return;
+        default:
+            printf("Opcion invalida.\n");
+    }
+}
+
+void mostrar_transacciones() {
+    printf("\n--- Listado de Transacciones ---\n");
+    for (int i = 0; i < cantidad_transacciones; i++) {
+        printf("ID Producto: %d, Fecha: %s, Tipo: %s, Cantidad: %d\n",
+               transacciones[i].id_producto, transacciones[i].fechadetransaccion, transacciones[i].operacion, transacciones[i].cantidad);
+    }
+    gestion_de_transacciones();
+}
+
+void gestion_de_transacciones() {
+    int opcion;
+    printf("\nOpciones:\n");
+    printf("1. Registrar nueva transaccion\n");
+    printf("2. Regresar al menu principal\n");
+    printf("Seleccione una opcion: ");
+    scanf("%d", &opcion);
+
+    if (opcion == 1) {
+        Transaccion t;
+        printf("Ingrese ID del producto: ");
+        scanf("%d", &t.id_producto);
+        printf("Ingrese fecha (YYYY-MM-DD): ");
+        scanf("%s", t.fechadetransaccion);
+        printf("Ingrese tipo de transaccion (entrada/salida/ajuste): ");
+        scanf("%s", t.operacion);
+        printf("Ingrese cantidad: ");
+        scanf("%d", &t.cantidad);
+
+        int encontrado = 0;
+        for (int i = 0; i < cantidad_productos; i++) {
+            if (inventario[i].id == t.id_producto) {
+                if (strcmp(t.operacion, "salida") == 0 && inventario[i].existencia < t.cantidad) {
+                    printf("Error: Cantidad insuficiente.\n");
+                } else {
+                    if (strcmp(t.operacion, "entrada") == 0) {
+                        inventario[i].existencia += t.cantidad;
+                    } else if (strcmp(t.operacion, "salida") == 0) {
+                        inventario[i].existencia -= t.cantidad;
+                    } else if (strcmp(t.operacion, "ajuste") == 0) {
+                        inventario[i].existencia = t.cantidad;
+                    }
+                    transacciones[cantidad_transacciones++] = t;
+                    printf("Transaccion registrada con exito.\n");
+                }
+                encontrado = 1;
+                break;
+            }
+        }
+        if (!encontrado) {
+            printf("Producto no encontrado.\n");
+        }
+    }
+}
+
+void salir_del_programa() {
+    printf("Gracias por usar el programa. Adios!\n");
+    exit(0);
+}
+
+
+
+
+
+
 
 
 
