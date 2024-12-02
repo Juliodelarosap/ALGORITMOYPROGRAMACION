@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,56 +8,55 @@
 
 // ESTRUCTURAS
 typedef struct {
-    int id;                         // ID del producto
-    char nombre[50];                // Nombre del producto
-    int existencia;                 // Cantidad en existencia
-    char unidad_medida;             // Unidad de medida (l=libra, k=kilo, i=litro, o=onza, t=otro)
-    char empaque;                   // Tipo de empaque (c=caja, b=botella, g=granel, f=funda, o=otro)
-    float peso;                     // Peso del producto
-    float precio_compra;            // Precio de compra del producto
-    float precio_venta;             // Precio de venta del producto (20% sobre precio_compra)
-    char estado;                    // Estado del producto (a=activo, c=cancelado, d=descontinuado)
-    char proveedor[50];             // Proveedor del producto
-    char fecha_ultima_compra[20];   // Fecha de la última compra
-    char fecha_ultima_venta[20];    // Fecha de la última venta
+    int id;
+    char nombre[50];
+    int existencia;
+    char unidad_medida; // l=libra, k=kilo, i=litro, o=onza, t=otro
+    char empaque;       // c=caja, b=botella, g=granel, f=funda, o=otro
+    float peso;
+    float precio_compra;
+    float precio_venta; // 20% sobre precio_compra
+    char estado;        // a=activo, c=cancelado, d=descontinuado
+    char proveedor[50];
+    char fecha_ultima_compra[20];
+    char fecha_ultima_venta[20];
 } Producto;
 
 typedef struct {
-    int id_producto;                // ID del producto
-    char nombre_producto[50];       // Nombre del producto
-    char fecha_transaccion[20];     // Fecha de la transacción
-    char tipo_transaccion;          // Tipo de transacción (e=entrada, s=salida, a=ajuste)
-    int cantidad;                   // Cantidad de la transacción
-    float precio;                   // Precio de la transacción
-    char proveedor[50];             // Proveedor de la transacción
+    int id_producto;
+    char nombre_producto[50];
+    char fecha_transaccion[20];
+    char tipo_transaccion; // e=entrada, s=salida, a=ajuste
+    int cantidad;
+    float precio;
+    char proveedor[50];
 } Transaccion;
 
 // VARIABLES GLOBALES
-Producto inventario[MAX_PRODUCTOS]; // Arreglo de productos en el inventario
-Transaccion transacciones[MAX_TRANSACCIONES]; // Arreglo de transacciones
-int cantidad_productos = 0;         // Cantidad de productos en el inventario
-int cantidad_transacciones = 0;     // Cantidad de transacciones registradas
+Producto inventario[MAX_PRODUCTOS];
+Transaccion transacciones[MAX_TRANSACCIONES];
+int cantidad_productos = 0;
+int cantidad_transacciones = 0;
 
 // PROTOTIPOS DE FUNCIONES
-void mostrar_menu_principal();      // Muestra el menú principal
-void gestion_inventario();          // Gestiona el inventario
-void gestion_transacciones();       // Gestiona las transacciones
-void mostrar_inventario();          // Muestra el inventario
-void crear_actualizar_producto();   // Crea o actualiza un producto
-void eliminar_producto();           // Elimina un producto
-void mostrar_transacciones();       // Muestra las transacciones
-void registrar_transaccion();       // Registra una transacción
-void salir_programa();              // Sale del programa
+void mostrar_menu_principal();
+void gestion_inventario();
+void gestion_transacciones();
+void mostrar_inventario();
+void crear_actualizar_producto();
+void eliminar_producto();
+void mostrar_transacciones();
+void registrar_transaccion();
+void salir_programa();
 
 // FUNCIÓN PRINCIPAL
 int main() {
-    mostrar_menu_principal();       // Llama a la función para mostrar el menú principal
+    mostrar_menu_principal();
     return 0;
 }
 
 // IMPLEMENTACIÓN DE FUNCIONES
 
-// Muestra el menú principal y gestiona la selección del usuario
 void mostrar_menu_principal() {
     int opcion;
     do {
@@ -71,13 +69,13 @@ void mostrar_menu_principal() {
 
         switch (opcion) {
             case 1:
-                gestion_inventario(); // Llama a la función para gestionar el inventario
+                gestion_inventario();
                 break;
             case 2:
-                gestion_transacciones(); // Llama a la función para gestionar las transacciones
+                gestion_transacciones();
                 break;
             case 3:
-                salir_programa(); // Llama a la función para salir del programa
+                salir_programa();
                 break;
             default:
                 printf("Opcion no valida.\n");
@@ -85,7 +83,6 @@ void mostrar_menu_principal() {
     } while (opcion != 3);
 }
 
-// Gestiona el inventario y las opciones del usuario
 void gestion_inventario() {
     int opcion;
     do {
@@ -99,23 +96,22 @@ void gestion_inventario() {
 
         switch (opcion) {
             case 1:
-                mostrar_inventario(); // Llama a la función para mostrar el inventario
+                mostrar_inventario();
                 break;
             case 2:
-                crear_actualizar_producto(); // Llama a la función para crear o actualizar un producto
+                crear_actualizar_producto();
                 break;
             case 3:
-                eliminar_producto(); // Llama a la función para eliminar un producto
+                eliminar_producto();
                 break;
             case 4:
-                return; // Vuelve al menú principal
+                return;
             default:
                 printf("Opcion no valida.\n");
         }
     } while (opcion != 4);
 }
 
-// Gestiona las transacciones y las opciones del usuario
 void gestion_transacciones() {
     int opcion;
     do {
@@ -128,20 +124,19 @@ void gestion_transacciones() {
 
         switch (opcion) {
             case 1:
-                mostrar_transacciones(); // Llama a la función para mostrar las transacciones
+                mostrar_transacciones();
                 break;
             case 2:
-                registrar_transaccion(); // Llama a la función para registrar una transacción
+                registrar_transaccion();
                 break;
             case 3:
-                return; // Vuelve al menú principal
+                return;
             default:
                 printf("Opcion no valida.\n");
         }
     } while (opcion != 3);
 }
 
-// Muestra el inventario de productos
 void mostrar_inventario() {
     printf("\n--- LISTADO DE INVENTARIO ---\n");
     for (int i = 0; i < cantidad_productos; i++) {
@@ -151,7 +146,6 @@ void mostrar_inventario() {
     }
 }
 
-// Crea o actualiza un producto en el inventario
 void crear_actualizar_producto() {
     Producto nuevo_producto;
     printf("\n--- CREAR/ACTUALIZAR PRODUCTO ---\n");
@@ -195,7 +189,6 @@ void crear_actualizar_producto() {
     }
 }
 
-// Elimina un producto del inventario
 void eliminar_producto() {
     int id;
     printf("\n--- ELIMINAR PRODUCTO ---\n");
@@ -214,7 +207,6 @@ void eliminar_producto() {
     printf("Error: Producto no encontrado.\n");
 }
 
-// Muestra el listado de transacciones
 void mostrar_transacciones() {
     printf("\n--- LISTADO DE TRANSACCIONES ---\n");
     for (int i = 0; i < cantidad_transacciones; i++) {
@@ -225,7 +217,6 @@ void mostrar_transacciones() {
     }
 }
 
-// Registra una nueva transacción
 void registrar_transaccion() {
     Transaccion nueva_transaccion;
     printf("\n--- REGISTRAR TRANSACCION ---\n");
@@ -253,18 +244,7 @@ void registrar_transaccion() {
     }
 }
 
-// Sale del programa
 void salir_programa() {
     printf("\nGracias por usar el programa. Adios!\n");
     exit(0);
 }
-
-
-
-
-
-
-
-
-
-    
