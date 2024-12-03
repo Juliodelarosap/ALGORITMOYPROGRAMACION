@@ -309,7 +309,7 @@ void crear_actualizar_producto() { //funcion modificada para no tener que repeti
                 switch (campo) {
                     case 1:
                         printf("Ingrese el nuevo nombre: ");
-                        scanf(" %[^\n]", inventario[i].nombre);
+                        scanf(" %[^\n]", inventario[i].nombre);//revisar esa forma de google 
                         break;
                     case 2:
                         printf("Ingrese la nueva existencia: ");
@@ -451,4 +451,5 @@ void registrar_transaccion() {
 void salir_programa() {
     printf("Gracias por utilizar el programa. Adios.\n");
     exit(0);
+    //return 0;
 }
