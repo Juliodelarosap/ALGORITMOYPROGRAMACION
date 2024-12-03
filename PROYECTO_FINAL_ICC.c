@@ -195,7 +195,7 @@ void mostrar_inventario() {
         printf("ID: %d | Nombre: %s | Existencia: %d | Precio de Venta: %.2f | Proveedor: %s | Estado: %c\n",
                inventario[i].id, inventario[i].nombre, inventario[i].existencia,
                inventario[i].precio_venta, inventario[i].proveedor, inventario[i].estado);// se modifico para que muestre el estado del producto, favor revisar...
-    }
+    }                                                                                     // R: se reviso 
     getch();
 }
  
@@ -309,7 +309,7 @@ void crear_actualizar_producto() { //funcion modificada para no tener que repeti
                 switch (campo) {
                     case 1:
                         printf("Ingrese el nuevo nombre: ");
-                        scanf(" %[^\n]", inventario[i].nombre);
+                        scanf(" %[^\n]", inventario[i].nombre);//revisar esa forma de google 
                         break;
                     case 2:
                         printf("Ingrese la nueva existencia: ");
@@ -378,57 +378,95 @@ void eliminar_producto() {
 
 void mostrar_transacciones() {
     system("cls");  // Limpiar pantalla
-    printf("\n--- LISTADO DE TRANSACCIONES ---\n");
-    for (int i = 0; i < cantidad_transacciones; i++) {
-        printf("ID Producto: %d | Nombre: %s | Fecha: %s | Tipo: %c | Cantidad: %d | Proveedor: %s\n",
-               transacciones[i].id_producto, transacciones[i].nombre_producto,
-               transacciones[i].fecha_transaccion, transacciones[i].tipo_transaccion,
-               transacciones[i].cantidad, transacciones[i].proveedor);
+    if (cantidad_transacciones == 0) {
+        printf("No hay transacciones registradas.\n");
+    } else {
+        printf("\n--- LISTADO DE TRANSACCIONES ---\n");
+        for (int i = 0; i < cantidad_transacciones; i++) {
+            printf("ID Producto: %d | Nombre: %s | Fecha: %s | Tipo: %c | Cantidad: %d | Proveedor: %s\n",
+                   transacciones[i].id_producto, transacciones[i].nombre_producto,
+                   transacciones[i].fecha_transaccion, transacciones[i].tipo_transaccion,
+                   transacciones[i].cantidad, transacciones[i].proveedor);
+        }
     }
+    printf("\nPresione cualquier tecla para continuar...");
+    getch();  // Esperar a que el usuario presione una tecla
 }
 
-void registrar_transaccion() { // hagamos que solo usemos el id del producto para no tener que entrar los dato again pli, porque que pereza
+
+void registrar_transaccion() { 
     system("cls");  // Limpiar pantalla
     Transaccion nueva_transaccion;
     printf("\n--- REGISTRAR TRANSACCION ---\n");
     printf("Ingrese el ID del producto: ");
     scanf("%d", &nueva_transaccion.id_producto);
-    printf("Ingrese el nombre del producto: ");
-    scanf(" %[^\n]", nueva_transaccion.nombre_producto);
+
+    // Buscar el producto en el inventario
+   /* int producto_encontrado = -1;
+    for (int i = 0; i < cantidad_productos; i++) {
+        if (inventario[i].id == nueva_transaccion.id_producto) {
+            producto_encontrado = i;
+            strcpy(nueva_transaccion.nombre_producto, inventario[i].nombre);
+            break;
+        }
+    }
+
+    if (producto_encontrado == -1) {
+        printf("Error: Producto no encontrado en el inventario.\n");
+        return;
+    }*/
+    int producto_encontrado = 0;                                              
+int encontrado = 0;  // Nueva bandera para indicar si el producto se encontró
+
+for (int i = 0; i < cantidad_productos; i++) {
+    if (inventario[i].id == nueva_transaccion.id_producto) {
+        producto_encontrado = i;
+        strcpy(nueva_transaccion.nombre_producto, inventario[i].nombre);
+        encontrado = 1;  // Marca que el producto fue encontrado
+        break;
+    }
+}
+
+if (!encontrado) {  // Verifica si no se encontró el producto
+    printf("Error: Producto no encontrado en el inventario.\n");
+    return;
+}
+
+
+    printf("Producto: %s\n", nueva_transaccion.nombre_producto);
     printf("Ingrese la fecha de la transaccion: ");
     scanf(" %[^\n]", nueva_transaccion.fecha_transaccion);
     printf("Ingrese el tipo de transaccion (e=entrada, s=salida, a=ajuste): ");
     scanf(" %c", &nueva_transaccion.tipo_transaccion);
     printf("Ingrese la cantidad: ");
     scanf("%d", &nueva_transaccion.cantidad);
-    printf("Ingrese el proveedor: ");
-    scanf(" %[^\n]", nueva_transaccion.proveedor);
 
-    for (int i = 0; i < cantidad_productos; i++) {
-        if (inventario[i].id == nueva_transaccion.id_producto) {
-            if (nueva_transaccion.tipo_transaccion == 'e') {
-                inventario[i].existencia += nueva_transaccion.cantidad;
-                strcpy(inventario[i].fecha_ultima_compra, nueva_transaccion.fecha_transaccion);
-            } else if (nueva_transaccion.tipo_transaccion == 's') {
-                if (inventario[i].existencia >= nueva_transaccion.cantidad) {
-                    inventario[i].existencia -= nueva_transaccion.cantidad;
-                    strcpy(inventario[i].fecha_ultima_venta, nueva_transaccion.fecha_transaccion);
-                } else {
-                    printf("Error: Inventario insuficiente.\n");
-                    return;
-                }
-            } else if (nueva_transaccion.tipo_transaccion == 'a') {
-                inventario[i].existencia += nueva_transaccion.cantidad;
-            }
-            transacciones[cantidad_transacciones++] = nueva_transaccion;
-            printf("Transaccion registrada con exito.\n");
+    // Actualizar inventario y registrar transacción
+    if (nueva_transaccion.tipo_transaccion == 'e') {
+        inventario[producto_encontrado].existencia += nueva_transaccion.cantidad;
+        strcpy(inventario[producto_encontrado].fecha_ultima_compra, nueva_transaccion.fecha_transaccion);
+    } else if (nueva_transaccion.tipo_transaccion == 's') {
+        if (inventario[producto_encontrado].existencia >= nueva_transaccion.cantidad) {
+            inventario[producto_encontrado].existencia -= nueva_transaccion.cantidad;
+            strcpy(inventario[producto_encontrado].fecha_ultima_venta, nueva_transaccion.fecha_transaccion);
+        } else {
+            printf("Error: Inventario insuficiente.\n");
             return;
         }
+    } else if (nueva_transaccion.tipo_transaccion == 'a') {
+        inventario[producto_encontrado].existencia += nueva_transaccion.cantidad;
+    } else {
+        printf("Error: Tipo de transaccion no valido.\n");
+        return;
     }
-    printf("Error: Producto no encontrado.\n");
+
+    transacciones[cantidad_transacciones++] = nueva_transaccion;
+    printf("Transaccion registrada con exito.\n");
 }
+
 
 void salir_programa() {
     printf("Gracias por utilizar el programa. Adios.\n");
     exit(0);
+    //return 0; // es lo mismo que exit(0)
 }
