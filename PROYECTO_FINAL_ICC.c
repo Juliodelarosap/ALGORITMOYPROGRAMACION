@@ -195,7 +195,7 @@ void mostrar_inventario() {
         printf("ID: %d | Nombre: %s | Existencia: %d | Precio de Venta: %.2f | Proveedor: %s | Estado: %c\n",
                inventario[i].id, inventario[i].nombre, inventario[i].existencia,
                inventario[i].precio_venta, inventario[i].proveedor, inventario[i].estado);// se modifico para que muestre el estado del producto, favor revisar...
-    }
+    }                                                                                     // R: se reviso 
     getch();
 }
  
@@ -402,7 +402,7 @@ void registrar_transaccion() {
     scanf("%d", &nueva_transaccion.id_producto);
 
     // Buscar el producto en el inventario
-    int producto_encontrado = -1;
+   /* int producto_encontrado = -1;
     for (int i = 0; i < cantidad_productos; i++) {
         if (inventario[i].id == nueva_transaccion.id_producto) {
             producto_encontrado = i;
@@ -414,7 +414,24 @@ void registrar_transaccion() {
     if (producto_encontrado == -1) {
         printf("Error: Producto no encontrado en el inventario.\n");
         return;
+    }*/
+    int producto_encontrado = 0;                                              
+int encontrado = 0;  // Nueva bandera para indicar si el producto se encontró
+
+for (int i = 0; i < cantidad_productos; i++) {
+    if (inventario[i].id == nueva_transaccion.id_producto) {
+        producto_encontrado = i;
+        strcpy(nueva_transaccion.nombre_producto, inventario[i].nombre);
+        encontrado = 1;  // Marca que el producto fue encontrado
+        break;
     }
+}
+
+if (!encontrado) {  // Verifica si no se encontró el producto
+    printf("Error: Producto no encontrado en el inventario.\n");
+    return;
+}
+
 
     printf("Producto: %s\n", nueva_transaccion.nombre_producto);
     printf("Ingrese la fecha de la transaccion: ");
@@ -451,5 +468,5 @@ void registrar_transaccion() {
 void salir_programa() {
     printf("Gracias por utilizar el programa. Adios.\n");
     exit(0);
-    //return 0;
+    //return 0; // es lo mismo que exit(0)
 }
