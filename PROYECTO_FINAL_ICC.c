@@ -1,12 +1,52 @@
+
+/**
+ * @file PROYECTO_FINAL_ICC.c
+ * @brief Programa para la gestión de inventario y transacciones de productos.
+ * 
+ * Este programa permite gestionar un inventario de productos y registrar transacciones
+ * de entrada, salida y ajuste de inventario. Proporciona un menú principal para acceder
+ * a las funcionalidades de gestión de inventario y transacciones.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 // CONSTANTES
-#define MAX_PRODUCTOS 100
-#define MAX_TRANSACCIONES 100
+#define MAX_PRODUCTOS 100 ///< Número máximo de productos en el inventario.
+#define MAX_TRANSACCIONES 100 ///< Número máximo de transacciones registradas.
 
 // ESTRUCTURAS
+
+/**
+ * @struct Producto
+ * @brief Estructura que representa un producto en el inventario.
+ * 
+ * @var Producto::id
+ * ID del producto.
+ * @var Producto::nombre
+ * Nombre del producto.
+ * @var Producto::existencia
+ * Cantidad en existencia del producto.
+ * @var Producto::unidad_medida
+ * Unidad de medida del producto (l=libra, k=kilo, i=litro, o=onza, t=otro).
+ * @var Producto::empaque
+ * Tipo de empaque del producto (c=caja, b=botella, g=granel, f=funda, o=otro).
+ * @var Producto::peso
+ * Peso del producto.
+ * @var Producto::precio_compra
+ * Precio de compra del producto.
+ * @var Producto::precio_venta
+ * Precio de venta del producto.
+ * @var Producto::estado
+ * Estado del producto (a=activo, c=cancelado, d=descontinuado).
+ * @var Producto::proveedor
+ * Proveedor del producto.
+ * @var Producto::fecha_ultima_compra
+ * Fecha de la última compra del producto.
+ * @var Producto::fecha_ultima_venta
+ * Fecha de la última venta del producto.
+ */
 typedef struct {
     int id;
     char nombre[50];
@@ -22,6 +62,23 @@ typedef struct {
     char fecha_ultima_venta[20];
 } Producto;
 
+/**
+ * @struct Transaccion
+ * @brief Estructura que representa una transacción de inventario.
+ * 
+ * @var Transaccion::id_producto
+ * ID del producto asociado a la transacción.
+ * @var Transaccion::nombre_producto
+ * Nombre del producto asociado a la transacción.
+ * @var Transaccion::fecha_transaccion
+ * Fecha de la transacción.
+ * @var Transaccion::tipo_transaccion
+ * Tipo de transacción (e=entrada, s=salida, a=ajuste).
+ * @var Transaccion::cantidad
+ * Cantidad de producto involucrada en la transacción.
+ * @var Transaccion::proveedor
+ * Proveedor asociado a la transacción.
+ */
 typedef struct {
     int id_producto;
     char nombre_producto[50];
@@ -32,166 +89,57 @@ typedef struct {
 } Transaccion;
 
 // VARIABLES GLOBALES
-Producto inventario[MAX_PRODUCTOS];
-Transaccion transacciones[MAX_TRANSACCIONES];
-int cantidad_productos = 0;
-int cantidad_transacciones = 0;
+Producto inventario[MAX_PRODUCTOS]; ///< Arreglo de productos en el inventario.
+Transaccion transacciones[MAX_TRANSACCIONES]; ///< Arreglo de transacciones registradas.
+int cantidad_productos = 0; ///< Cantidad actual de productos en el inventario.
+int cantidad_transacciones = 0; ///< Cantidad actual de transacciones registradas.
 
 // PROTOTIPOS DE FUNCIONES
+
+/**
+ * @brief Muestra el menú principal del programa.
+ */
 void mostrar_menu_principal();
+
+/**
+ * @brief Gestiona las opciones del inventario.
+ */
 void gestion_inventario();
+
+/**
+ * @brief Gestiona las opciones de transacciones.
+ */
 void gestion_transacciones();
+
+/**
+ * @brief Muestra el listado de productos en el inventario.
+ */
 void mostrar_inventario();
+
+/**
+ * @brief Crea o actualiza un producto en el inventario.
+ */
 void crear_actualizar_producto();
+
+/**
+ * @brief Elimina un producto del inventario.
+ */
 void eliminar_producto();
+
+/**
+ * @brief Muestra el listado de transacciones registradas.
+ */
 void mostrar_transacciones();
+
+/**
+ * @brief Registra una nueva transacción de inventario.
+ */
 void registrar_transaccion();
+
+/**
+ * @brief Sale del programa.
+ */
 void salir_programa();
-
-// FUNCIÓN PRINCIPAL
-int main() {
-    mostrar_menu_principal();
-    return 0;
-}
-
-// IMPLEMENTACIÓN DE FUNCIONES
-
-void mostrar_menu_principal() {
-    int opcion;
-    do {
-        printf("\n--- MENU PRINCIPAL ---\n");
-        printf("1. Listado de inventario (crear/actualizar/eliminar items)\n");
-        printf("2. Listado de transacciones (compra/salida/ajuste)\n");
-        printf("3. Salir del programa\n");
-        printf("Seleccione una opcion: ");
-        scanf("%d", &opcion);
-
-        switch (opcion) {
-            case 1:
-                gestion_inventario();
-                break;
-            case 2:
-                gestion_transacciones();
-                break;
-            case 3:
-                salir_programa();
-                break;
-            default:
-                printf("Opcion no valida.\n");
-        }
-    } while (opcion != 3);
-}
-
-void gestion_inventario() {
-    int opcion;
-    do {
-        printf("\n--- GESTION DE INVENTARIO ---\n");
-        printf("1. Mostrar listado de inventario\n");
-        printf("2. Crear/Actualizar items\n");
-        printf("3. Eliminar items\n");
-        printf("4. Volver al menu principal\n");
-        printf("Seleccione una opcion: ");
-        scanf("%d", &opcion);
-
-        switch (opcion) {
-            case 1:
-                mostrar_inventario();
-                break;
-            case 2:
-                crear_actualizar_producto();
-                break;
-            case 3:
-                eliminar_producto();
-                break;
-            case 4:
-                return;
-            default:
-                printf("Opcion no valida.\n");
-        }
-    } while (opcion != 4);
-}
-
-void gestion_transacciones() {
-    int opcion;
-    do {
-        printf("\n--- GESTION DE TRANSACCIONES ---\n");
-        printf("1. Mostrar listado de transacciones\n");
-        printf("2. Registrar transaccion (compra/salida/ajuste)\n");
-        printf("3. Volver al menu principal\n");
-        printf("Seleccione una opcion: ");
-        scanf("%d", &opcion);
-
-        switch (opcion) {
-            case 1:
-                mostrar_transacciones();
-                break;
-            case 2:
-                registrar_transaccion();
-                break;
-            case 3:
-                return;
-            default:
-                printf("Opcion no valida.\n");
-        }
-    } while (opcion != 3);
-}
-
-void mostrar_inventario() {
-    printf("\n--- LISTADO DE INVENTARIO ---\n");
-    for (int i = 0; i < cantidad_productos; i++) {
-        printf("ID: %d | Nombre: %s | Existencia: %d | Precio de Venta: %.2f | Proveedor: %s\n",
-               inventario[i].id, inventario[i].nombre, inventario[i].existencia,
-               inventario[i].precio_venta, inventario[i].proveedor);
-    }
-}
-
-void crear_actualizar_producto() {
-    Producto nuevo_producto;
-    printf("\n--- CREAR/ACTUALIZAR PRODUCTO ---\n");
-    printf("Ingrese el ID del producto: ");
-    scanf("%d", &nuevo_producto.id);
-    printf("Ingrese el nombre del producto: ");
-    scanf(" %[^\n]", nuevo_producto.nombre);
-    printf("Ingrese la existencia inicial: ");
-    scanf("%d", &nuevo_producto.existencia);
-    printf("Ingrese la unidad de medida (l=libra, k=kilo, i=litro, o=onza, t=otro): ");
-    scanf(" %c", &nuevo_producto.unidad_medida);
-    printf("Ingrese el empaque (c=caja, b=botella, g=granel, f=funda, o=otro): ");
-    scanf(" %c", &nuevo_producto.empaque);
-    printf("Ingrese el peso del producto: ");
-    scanf("%f", &nuevo_producto.peso);
-    printf("Ingrese el precio de compra: ");
-    scanf("%f", &nuevo_producto.precio_compra);
-    nuevo_producto.precio_venta = nuevo_producto.precio_compra * 1.2;
-    printf("Ingrese el estado del producto (a=activo, c=cancelado, d=descontinuado): ");
-    scanf(" %c", &nuevo_producto.estado);
-    printf("Ingrese el proveedor: ");
-    scanf(" %[^\n]", nuevo_producto.proveedor);
-    printf("Ingrese la fecha de la ultima compra: ");
-    scanf(" %[^\n]", nuevo_producto.fecha_ultima_compra);
-
-    // Actualización o creación
-    for (int i = 0; i < cantidad_productos; i++) {
-        if (inventario[i].id == nuevo_producto.id) {
-            inventario[i] = nuevo_producto;
-            printf("Producto actualizado con exito.\n");
-            return;
-        }
-    }
-    if (cantidad_productos < MAX_PRODUCTOS) {
-        inventario[cantidad_productos++] = nuevo_producto;
-        printf("Producto agregado con exito.\n");
-    } else {
-        printf("Error: Inventario lleno.\n");
-    }
-}
-
-void eliminar_producto() {
-    int id;
-    printf("\n--- ELIMINAR PRODUCTO ---\n");
-    printf("Ingrese el ID del producto a eliminar: ");
-    scanf("%d", &id);
-    for (int i = 0; i < cantidad_productos; i++) {
         if (inventario[i].id == id) {
             for (int j = i; j < cantidad_productos - 1; j++) {
                 inventario[j] = inventario[j + 1];
