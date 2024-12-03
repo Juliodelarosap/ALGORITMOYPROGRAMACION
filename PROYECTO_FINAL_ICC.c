@@ -57,6 +57,7 @@ void eliminar_producto();
 void mostrar_transacciones();
 void registrar_transaccion();
 void salir_programa();
+void factura();
 
 // FUNCIÓN PRINCIPAL
 int main() {
@@ -445,7 +446,9 @@ if (!encontrado) {  // Verifica si no se encontró el producto
     if (nueva_transaccion.tipo_transaccion == 'e') {
         inventario[producto_encontrado].existencia += nueva_transaccion.cantidad;
         strcpy(inventario[producto_encontrado].fecha_ultima_compra, nueva_transaccion.fecha_transaccion);
-    } else if (nueva_transaccion.tipo_transaccion == 's') {
+    } 
+    
+    else if (nueva_transaccion.tipo_transaccion == 's') {
         if (inventario[producto_encontrado].existencia >= nueva_transaccion.cantidad) {
             inventario[producto_encontrado].existencia -= nueva_transaccion.cantidad;
             strcpy(inventario[producto_encontrado].fecha_ultima_venta, nueva_transaccion.fecha_transaccion);
@@ -453,20 +456,57 @@ if (!encontrado) {  // Verifica si no se encontró el producto
             printf("Error: Inventario insuficiente.\n");
             return;
         }
-    } else if (nueva_transaccion.tipo_transaccion == 'a') {
+    } 
+    
+    else if (nueva_transaccion.tipo_transaccion == 'a') {
         inventario[producto_encontrado].existencia += nueva_transaccion.cantidad;
-    } else {
+    } 
+    
+    else {
         printf("Error: Tipo de transaccion no valido.\n");
         return;
     }
 
     transacciones[cantidad_transacciones++] = nueva_transaccion;
     printf("Transaccion registrada con exito.\n");
+    factura();
 }
+
+void factura() {
+    system("cls");  // Limpiar pantalla
+    printf("\n--- FACTURA ---\n");
+
+    // Buscar el producto en el inventario por ID
+    int id_producto = transacciones[cantidad_transacciones - 1].id_producto;
+    int producto_encontrado = -1;
+    for (int i = 0; i < cantidad_productos; i++) {
+        if (inventario[i].id == id_producto) {
+            producto_encontrado = i;
+            break;
+        }
+    }
+
+    if (producto_encontrado == -1) {
+        printf("Error: Producto no encontrado en el inventario.\n");
+        return;
+    }
+
+    // Imprimir factura
+    printf("ID Producto: %d | Nombre: %s | Cantidad: %d | Precio unidad: %.2f | Precio total: %.2f\n",
+           id_producto,
+           inventario[producto_encontrado].nombre,
+           transacciones[cantidad_transacciones - 1].cantidad,
+           inventario[producto_encontrado].precio_venta,
+           (transacciones[cantidad_transacciones - 1].cantidad * inventario[producto_encontrado].precio_venta));
+
+    getch();
+}
+
 
 
 void salir_programa() {
     printf("Gracias por utilizar el programa. Adios.\n");
     exit(0);
+
     //return 0; // es lo mismo que exit(0)
 }
