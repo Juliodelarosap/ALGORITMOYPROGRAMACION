@@ -8,7 +8,7 @@
 #define MAX_TRANSACCIONES 100
 
 // ingreso al sistema usuario x contraseña
-#define USUARIO "abc"
+#define USUARIO "3/4m"
 #define CLAVE "1016"
 #define LONGITUD 80 
 
@@ -88,7 +88,7 @@ int main() {
 
     } else {
         printf("\n\tHa sobrepasado el numero de intentos permitidos\n");
-        exit(-1);
+        exit(0);
     }
     // fin login
 
@@ -391,7 +391,7 @@ void mostrar_transacciones() {
         }
     }
     printf("\nPresione cualquier tecla para continuar...");
-    getch();  // Esperar a que el usuario presione una tecla
+    getch();  // esperar que el usuario presione una tecla
 }
 
 
@@ -416,7 +416,8 @@ void registrar_transaccion() {
         printf("Error: Producto no encontrado en el inventario.\n");
         return;
     }*/
-    int producto_encontrado = 0;                                              
+
+int producto_encontrado = 0;                                              
 int encontrado = 0;  // Nueva bandera para indicar si el producto se encontró
 
 for (int i = 0; i < cantidad_productos; i++) {
@@ -447,6 +448,7 @@ if (!encontrado) {  // Verifica si no se encontró el producto
         inventario[producto_encontrado].existencia += nueva_transaccion.cantidad;
         strcpy(inventario[producto_encontrado].fecha_ultima_compra, nueva_transaccion.fecha_transaccion);
     } 
+    
     
     else if (nueva_transaccion.tipo_transaccion == 's') {
         if (inventario[producto_encontrado].existencia >= nueva_transaccion.cantidad) {
