@@ -202,48 +202,6 @@ void mostrar_inventario() {
  
 }
 
-/*void crear_actualizar_producto() {
-    system("cls");  // Limpiar pantalla
-    Producto nuevo_producto;
-    printf("\n--- CREAR/ACTUALIZAR PRODUCTO ---\n");
-    printf("Ingrese el ID del producto: ");
-    scanf("%d", &nuevo_producto.id);
-    printf("Ingrese el nombre del producto: ");
-    scanf(" %[^\n]", nuevo_producto.nombre);
-    printf("Ingrese la existencia inicial: ");
-    scanf("%d", &nuevo_producto.existencia);
-    printf("Ingrese la unidad de medida (l=libra, k=kilo, i=litro, o=onza, u=unidad): ");
-    scanf(" %c", &nuevo_producto.unidad_medida);
-    printf("Ingrese el empaque (c=caja, b=botella, g=granel, f=funda, o=otro): ");
-    scanf(" %c", &nuevo_producto.empaque);
-    printf("Ingrese el peso del producto: ");
-    scanf("%f", &nuevo_producto.peso);
-    printf("Ingrese el precio de compra: ");
-    scanf("%f", &nuevo_producto.precio_compra);
-    nuevo_producto.precio_venta = nuevo_producto.precio_compra * 1.2;
-    printf("Ingrese el estado del producto (a=activo, c=cancelado, d=descontinuado): ");
-    scanf(" %c", &nuevo_producto.estado);
-    printf("Ingrese el proveedor: ");
-    scanf(" %[^\n]", nuevo_producto.proveedor);
-    printf("Ingrese la fecha de la ultima compra: ");
-    scanf(" %[^\n]", nuevo_producto.fecha_ultima_compra);
-
-    // Actualización o creación
-    for (int i = 0; i < cantidad_productos; i++) {
-        if (inventario[i].id == nuevo_producto.id) {
-            inventario[i] = nuevo_producto;
-            printf("Producto actualizado con exito.\n");
-            return;
-        }
-    }
-    if (cantidad_productos < MAX_PRODUCTOS) {
-
-        inventario[cantidad_productos++] = nuevo_producto;
-        printf("Producto agregado con exito.\n");
-    } else {
-        printf("Error: Inventario lleno.\n");
-    }
-}*/
 void crear_actualizar_producto() { //funcion modificada para no tener que repetir el proceso, favor revisar...
     system("cls");  // Limpiar pantalla
     int opcion;
@@ -401,21 +359,6 @@ void registrar_transaccion() {
     printf("\n--- REGISTRAR TRANSACCION ---\n");
     printf("Ingrese el ID del producto: ");
     scanf("%d", &nueva_transaccion.id_producto);
-
-    // Buscar el producto en el inventario
-   /* int producto_encontrado = -1;
-    for (int i = 0; i < cantidad_productos; i++) {
-        if (inventario[i].id == nueva_transaccion.id_producto) {
-            producto_encontrado = i;
-            strcpy(nueva_transaccion.nombre_producto, inventario[i].nombre);
-            break;
-        }
-    }
-
-    if (producto_encontrado == -1) {
-        printf("Error: Producto no encontrado en el inventario.\n");
-        return;
-    }*/
 
 int producto_encontrado = 0;                                              
 int encontrado = 0;  // Nueva bandera para indicar si el producto se encontró
